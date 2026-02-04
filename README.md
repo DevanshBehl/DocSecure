@@ -253,11 +253,6 @@ Response:
 
 ---
 
-## 📄 License
-
-MIT License - See [LICENSE](LICENSE) for details.
-
----
 
 <div align="center">
   <p>Built with 🛡️ for Cryptography & Network Security</p>
