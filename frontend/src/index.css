@@ -1,0 +1,153 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base styles */
+:root {
+  --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  --gradient-accent: linear-gradient(135deg, #06b6d4 0%, #6366f1 100%);
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-dark-950 text-dark-100 font-sans antialiased;
+  min-height: 100vh;
+  background-image: 
+    radial-gradient(ellipse 80% 80% at 50% -20%, rgba(99, 102, 241, 0.15), transparent),
+    radial-gradient(ellipse 60% 60% at 100% 100%, rgba(139, 92, 246, 0.1), transparent);
+}
+
+/* Glassmorphism utilities */
+@layer components {
+  .glass {
+    @apply bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl;
+  }
+
+  .glass-card {
+    @apply glass p-6 transition-all duration-300;
+  }
+
+  .glass-card:hover {
+    @apply bg-white/[0.08] border-white/20;
+  }
+
+  .glass-input {
+    @apply w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl 
+           text-dark-100 placeholder-dark-400
+           focus:outline-none focus:ring-2 focus:ring-aegis-primary/50 focus:border-aegis-primary/50
+           transition-all duration-300;
+  }
+
+  .glass-button {
+    @apply px-6 py-3 rounded-xl font-medium transition-all duration-300
+           bg-gradient-to-r from-aegis-primary to-aegis-secondary
+           hover:shadow-lg hover:shadow-aegis-primary/25
+           active:scale-[0.98]
+           disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none;
+  }
+
+  .glass-button-outline {
+    @apply px-6 py-3 rounded-xl font-medium transition-all duration-300
+           bg-transparent border border-aegis-primary/50 text-aegis-primary
+           hover:bg-aegis-primary/10 hover:border-aegis-primary
+           active:scale-[0.98]
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .heading-gradient {
+    @apply bg-gradient-to-r from-aegis-primary via-aegis-secondary to-aegis-accent 
+           bg-clip-text text-transparent;
+  }
+
+  .link-hover {
+    @apply text-aegis-primary hover:text-aegis-secondary transition-colors duration-200 cursor-pointer;
+  }
+}
+
+/* Monospace styling for cryptographic values */
+.crypto-text {
+  @apply font-mono text-sm text-aegis-accent/90 break-all leading-relaxed;
+}
+
+/* Identicon placeholder styling */
+.identicon {
+  @apply rounded-full bg-gradient-to-br from-aegis-primary to-aegis-secondary p-0.5;
+}
+
+.identicon-inner {
+  @apply w-full h-full rounded-full bg-dark-900 flex items-center justify-center;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-dark-900;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-dark-600 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-dark-500;
+}
+
+/* Focus ring utility */
+.focus-ring {
+  @apply focus:outline-none focus:ring-2 focus:ring-aegis-primary/50 focus:ring-offset-2 focus:ring-offset-dark-950;
+}
+
+/* Loading states */
+.shimmer {
+  @apply animate-pulse bg-gradient-to-r from-dark-800 via-dark-700 to-dark-800 bg-[length:200%_100%];
+}
+
+/* Dropzone styles */
+.dropzone {
+  @apply border-2 border-dashed border-dark-600 rounded-2xl p-8 text-center 
+         transition-all duration-300 cursor-pointer;
+}
+
+.dropzone:hover {
+  @apply border-aegis-primary/50 bg-aegis-primary/5;
+}
+
+.dropzone-active {
+  @apply border-aegis-primary bg-aegis-primary/10 scale-[1.02];
+}
+
+/* Verification status colors */
+.status-verified {
+  @apply text-aegis-success;
+}
+
+.status-failed {
+  @apply text-aegis-danger;
+}
+
+/* Animation keyframes already in tailwind config, but adding fallbacks */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(16, 185, 129, 0.8);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
