@@ -93,13 +93,15 @@ router.post(
 
 /**
  * POST /api/documents/verify
- * Verify a signed PDF document (public endpoint)
+ * Verify a signed PDF document (requires authentication)
+ * Headers: Authorization: Bearer <token>
  * Body: multipart/form-data
  *   - file: Signed PDF document
- * Response: { verified: boolean, signerPublicKey: string }
+ * Response: { verified: boolean, signerPublicKey: string, signerEmail: string }
  */
 router.post(
     '/documents/verify',
+    authenticate,
     upload.single('file'),
     verifyDocument as any
 );

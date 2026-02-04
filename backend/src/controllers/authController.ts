@@ -152,9 +152,10 @@ export async function signup(
 
     } catch (error) {
         console.error('[AUTH] Signup error:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
         res.status(500).json({
             success: false,
-            message: 'An error occurred during registration'
+            message: `An error occurred during registration: ${errorMessage}`
         });
     }
 }

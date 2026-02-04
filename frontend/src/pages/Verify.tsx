@@ -1,25 +1,38 @@
 /**
  * AegisSign - Verify Page
  * 
- * Public verification page for signed documents.
- * No authentication required.
+ * Document verification page for signed documents.
+ * Requires authentication to verify documents.
  */
 
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Shield, ArrowLeft, Upload } from 'lucide-react';
-import { documentApi, VerifyResponse } from '../services/api';
+import { Shield, ArrowLeft, Upload, User, LogOut } from 'lucide-react';
+import { documentApi, VerifyResponse, authHelpers, User as UserType } from '../services/api';
 import FileUpload from '../components/FileUpload';
 import VerificationAnimation from '../components/VerificationAnimation';
 
 type VerifyState = 'idle' | 'scanning' | 'success' | 'failure';
 
 export default function Verify() {
+    const navigate = useNavigate();
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [verifyState, setVerifyState] = useState<VerifyState>('idle');
     const [result, setResult] = useState<VerifyResponse | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [user, setUser] = useState<UserType | null>(null);
+
+    useEffect(() => {
+        // Check if user is authenticated
+        const currentUser = authHelpers.getUser();
+        if (currentUser) {
+            setUser(currentUser);
+        } else {
+            // Redirect to login if not authenticated
+            navigate('/login');
+        }
+    }, [navigate]);
 
     const handleFileSelect = async (file: File) => {
         setSelectedFile(file);
@@ -57,6 +70,11 @@ export default function Verify() {
         handleClear();
     };
 
+    const handleLogout = () => {
+        authHelpers.logout();
+        navigate('/login');
+    };
+
     return (
         <div className="min-h-screen">
             {/* Background decoration */}
@@ -74,12 +92,28 @@ export default function Verify() {
                             <span className="text-xl font-bold heading-gradient">AegisSign</span>
                         </Link>
 
-                        <Link
-                            to="/login"
-                            className="text-sm text-dark-400 hover:text-aegis-primary transition-colors"
-                        >
-                            Sign In
-                        </Link>
+                        {user ? (
+                            <div className="flex items-center gap-4">
+                                <div className="flex items-center gap-2 text-sm text-dark-300">
+                                    <User className="w-4 h-4" />
+                                    <span>{user.email}</span>
+                                </div>
+                                <button
+                                    onClick={handleLogout}
+                                    className="text-sm text-dark-400 hover:text-aegis-primary transition-colors flex items-center gap-1"
+                                >
+                                    <LogOut className="w-4 h-4" />
+                                    Logout
+                                </button>
+                            </div>
+                        ) : (
+                            <Link
+                                to="/login"
+                                className="text-sm text-dark-400 hover:text-aegis-primary transition-colors"
+                            >
+                                Sign In
+                            </Link>
+                        )}
                     </div>
                 </div>
             </header>
@@ -98,7 +132,6 @@ export default function Verify() {
                         </h1>
                         <p className="text-dark-400 max-w-md mx-auto">
                             Upload a signed PDF to verify its authenticity and integrity.
-                            No account required.
                         </p>
                     </div>
 
@@ -195,7 +228,7 @@ export default function Verify() {
                         )}
                     </div>
 
-                    {/* Back to sign link */}
+                    {/* Back to dashboard link */}
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -203,11 +236,11 @@ export default function Verify() {
                         className="mt-8 text-center"
                     >
                         <Link
-                            to="/login"
+                            to="/dashboard"
                             className="inline-flex items-center gap-2 text-sm text-dark-500 hover:text-aegis-primary transition-colors"
                         >
                             <ArrowLeft className="w-4 h-4" />
-                            Sign in to sign your own documents
+                            Back to Dashboard
                         </Link>
                     </motion.div>
                 </motion.div>
