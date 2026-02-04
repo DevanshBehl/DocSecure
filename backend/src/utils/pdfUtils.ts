@@ -80,13 +80,26 @@ export async function injectSignature(
     pdfDoc.setProducer(`${existingProducer}||${SIGNATURE_KEY}:${signature}`);
     pdfDoc.setCreator(`${existingCreator}||${OWNER_KEY}:${publicKey}`);
 
-    // Add modification date
-    pdfDoc.setModificationDate(new Date());
+    // DO NOT set modification date - this changes the hash!
+    // pdfDoc.setModificationDate(new Date());
 
     // Serialize and return the modified PDF
     const signedPdfBytes = await pdfDoc.save();
 
     return signedPdfBytes;
+}
+
+/**
+ * Normalizes a PDF by loading and re-saving it
+ * This ensures consistent serialization for hashing
+ * @param pdfBuffer - Raw PDF buffer
+ * @returns Normalized PDF buffer
+ */
+export async function normalizePdf(pdfBuffer: Buffer | Uint8Array): Promise<Uint8Array> {
+    const pdfDoc = await PDFDocument.load(pdfBuffer, {
+        updateMetadata: false
+    });
+    return await pdfDoc.save();
 }
 
 // ============================================================================

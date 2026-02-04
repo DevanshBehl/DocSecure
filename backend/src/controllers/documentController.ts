@@ -30,7 +30,8 @@ import {
 import {
     hashPdfBuffer,
     injectSignature,
-    extractAndStripSignature
+    extractAndStripSignature,
+    normalizePdf
 } from '../utils/pdfUtils.js';
 
 // ============================================================================
@@ -121,8 +122,12 @@ export async function signDocument(
             return;
         }
 
-        // Step 1: Hash the raw PDF buffer
-        const pdfHash = hashPdfBuffer(file.buffer);
+        // Step 1: Normalize PDF and hash it
+        // CRITICAL: We must normalize (load + save) before hashing because
+        // pdf-lib re-serializes PDF differently. During verification, we strip
+        // metadata and re-serialize, so we need the same normalized form here.
+        const normalizedPdf = await normalizePdf(file.buffer);
+        const pdfHash = hashPdfBuffer(normalizedPdf);
         console.log(`[SIGN] PDF hash: ${pdfHash.toString('hex').substring(0, 16)}...`);
 
         // Step 2: Regenerate DEK from password and stored salt
@@ -152,9 +157,9 @@ export async function signDocument(
         secureWipe(privateKeyBytes);
         privateKeyBytes = null;
 
-        // Step 6: Inject signature into PDF metadata
+        // Step 6: Inject signature into PDF metadata (using normalized PDF)
         const signedPdfBytes = await injectSignature(
-            file.buffer,
+            normalizedPdf,
             signatureHex,
             user.publicKey
         );
