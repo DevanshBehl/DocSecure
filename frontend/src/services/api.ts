@@ -13,6 +13,7 @@ import axios, { AxiosError, AxiosInstance } from 'axios';
 export interface User {
     id: string;
     email: string;
+    organizationName: string;
     publicKey: string;
 }
 
@@ -28,6 +29,7 @@ export interface VerifyResponse {
     message: string;
     verified?: boolean;
     signerPublicKey?: string;
+    signerOrganization?: string;
 }
 
 export interface ApiError {
@@ -76,10 +78,11 @@ apiClient.interceptors.response.use(
 // ============================================================================
 
 export const authApi = {
-    signup: async (email: string, password: string): Promise<AuthResponse> => {
+    signup: async (email: string, password: string, organizationName: string): Promise<AuthResponse> => {
         const response = await apiClient.post<AuthResponse>('/auth/signup', {
             email,
             password,
+            organizationName,
         });
         return response.data;
     },

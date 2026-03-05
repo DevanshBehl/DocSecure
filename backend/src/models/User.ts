@@ -14,6 +14,7 @@ import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IUser extends Document {
     email: string;
+    organizationName: string;       // User's organization name
     passwordHash: string;           // bcrypt hash for login authentication
     publicKey: string;              // Hex-encoded Ed25519 public key
     encryptedPrivateKey: string;    // Hex-encoded AES-256-GCM encrypted private key
@@ -39,6 +40,11 @@ const userSchema = new Schema<IUser>(
                 /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                 'Please provide a valid email address'
             ]
+        },
+        organizationName: {
+            type: String,
+            required: [true, 'Organization name is required'],
+            trim: true
         },
         passwordHash: {
             type: String,

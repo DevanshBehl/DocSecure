@@ -155,6 +155,7 @@ export default function Verify() {
                                 <VerificationAnimation
                                     state={verifyState}
                                     signerPublicKey={result?.signerPublicKey}
+                                    signerOrganization={result?.signerOrganization}
                                     message={result?.message || error || undefined}
                                 />
 

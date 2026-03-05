@@ -7,12 +7,13 @@
 import { useState, FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Shield, Mail, Lock, ArrowRight, Loader2, Key, Info } from 'lucide-react';
+import { Shield, Mail, Lock, ArrowRight, Loader2, Key, Info, Building2 } from 'lucide-react';
 import { authApi } from '../services/api';
 import { useAuth } from '../App';
 
 export default function Register() {
     const [email, setEmail] = useState('');
+    const [organizationName, setOrganizationName] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState<string | null>(null);
@@ -40,7 +41,7 @@ export default function Register() {
         setIsLoading(true);
 
         try {
-            const response = await authApi.signup(email, password);
+            const response = await authApi.signup(email, password, organizationName);
 
             if (response.success && response.token && response.user) {
                 login(response.token, response.user);
@@ -129,6 +130,25 @@ export default function Register() {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     placeholder="you@example.com"
+                                    required
+                                    className="glass-input pl-12"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Organization Name field */}
+                        <div className="space-y-2">
+                            <label htmlFor="organizationName" className="block text-sm font-medium text-dark-300">
+                                Organization Name
+                            </label>
+                            <div className="relative">
+                                <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-dark-500" />
+                                <input
+                                    id="organizationName"
+                                    type="text"
+                                    value={organizationName}
+                                    onChange={(e) => setOrganizationName(e.target.value)}
+                                    placeholder="Your organization name"
                                     required
                                     className="glass-input pl-12"
                                 />

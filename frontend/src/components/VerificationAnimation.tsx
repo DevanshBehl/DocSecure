@@ -15,6 +15,7 @@ type VerificationState = 'idle' | 'scanning' | 'success' | 'failure';
 interface VerificationAnimationProps {
     state: VerificationState;
     signerPublicKey?: string;
+    signerOrganization?: string;
     message?: string;
 }
 
@@ -197,6 +198,7 @@ function IdleAnimation() {
 export default function VerificationAnimation({
     state,
     signerPublicKey,
+    signerOrganization,
     message,
 }: VerificationAnimationProps) {
     return (
@@ -244,8 +246,16 @@ export default function VerificationAnimation({
                             {message && (
                                 <p className="text-dark-300">{message}</p>
                             )}
+                            {signerOrganization && (
+                                <div className="mt-2 p-3 rounded-xl bg-dark-900/50 border border-aegis-success/20">
+                                    <p className="text-xs text-dark-500 mb-1">Organization</p>
+                                    <p className="text-sm font-medium text-dark-200">
+                                        {signerOrganization}
+                                    </p>
+                                </div>
+                            )}
                             {signerPublicKey && (
-                                <div className="mt-4 p-3 rounded-xl bg-dark-900/50 border border-aegis-success/20">
+                                <div className="mt-2 p-3 rounded-xl bg-dark-900/50 border border-aegis-success/20">
                                     <p className="text-xs text-dark-500 mb-1">Signer's Public Key</p>
                                     <code className="crypto-text text-xs block truncate max-w-xs">
                                         {signerPublicKey}

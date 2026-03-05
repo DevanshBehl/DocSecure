@@ -119,7 +119,7 @@ export default function Dashboard() {
             <div className="grid lg:grid-cols-3 gap-8">
                 {/* Left Column - Digital ID Card */}
                 <div className="lg:col-span-1">
-                    <DigitalIdCard email={user.email} publicKey={user.publicKey} />
+                    <DigitalIdCard email={user.email} organizationName={user.organizationName} publicKey={user.publicKey} />
 
                     {/* Quick Stats */}
                     <motion.div

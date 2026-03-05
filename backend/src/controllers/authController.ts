@@ -23,6 +23,7 @@ import {
 interface SignupRequestBody {
     email: string;
     password: string;
+    organizationName: string;
 }
 
 interface LoginRequestBody {
@@ -33,6 +34,7 @@ interface LoginRequestBody {
 interface UserResponse {
     id: string;
     email: string;
+    organizationName: string;
     publicKey: string;
 }
 
@@ -63,6 +65,7 @@ function formatUserResponse(user: IUser): UserResponse {
     return {
         id: user._id.toString(),
         email: user.email,
+        organizationName: user.organizationName,
         publicKey: user.publicKey
     };
 }
@@ -85,13 +88,13 @@ export async function signup(
     res: Response<AuthResponse>
 ): Promise<void> {
     try {
-        const { email, password } = req.body;
+        const { email, password, organizationName } = req.body;
 
         // Validate input
-        if (!email || !password) {
+        if (!email || !password || !organizationName) {
             res.status(400).json({
                 success: false,
-                message: 'Email and password are required'
+                message: 'Email, password, and organization name are required'
             });
             return;
         }
@@ -129,6 +132,7 @@ export async function signup(
         // Step 5: Create user in database
         const user = new User({
             email: email.toLowerCase(),
+            organizationName,
             passwordHash,
             publicKey,
             encryptedPrivateKey,

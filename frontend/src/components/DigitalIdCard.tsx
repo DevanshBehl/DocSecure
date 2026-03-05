@@ -10,6 +10,7 @@ import { useState } from 'react';
 
 interface DigitalIdCardProps {
     email: string;
+    organizationName: string;
     publicKey: string;
 }
 
@@ -30,7 +31,7 @@ function generateIdenticon(publicKey: string): string[] {
     return [colors[colorIndex]];
 }
 
-export default function DigitalIdCard({ email, publicKey }: DigitalIdCardProps) {
+export default function DigitalIdCard({ email, organizationName, publicKey }: DigitalIdCardProps) {
     const [copied, setCopied] = useState(false);
     const [gradientColors] = generateIdenticon(publicKey);
 
@@ -71,6 +72,7 @@ export default function DigitalIdCard({ email, publicKey }: DigitalIdCardProps) 
                         <div>
                             <h3 className="text-sm font-medium text-dark-400">Digital Identity</h3>
                             <p className="text-lg font-semibold text-dark-100">{email}</p>
+                            <p className="text-sm text-dark-400">{organizationName}</p>
                         </div>
                     </div>
 

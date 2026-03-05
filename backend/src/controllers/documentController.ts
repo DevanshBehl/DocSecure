@@ -65,6 +65,7 @@ interface VerifyResponse {
     message: string;
     verified?: boolean;
     signerEmail?: string;
+    signerOrganization?: string;
     signerPublicKey?: string;
     signedAt?: Date;
     error?: string;
@@ -274,7 +275,7 @@ export async function verifyDocument(
 
         // Step 2: Query Document Registry by the extracted signature
         const documentRecord = await DocumentModel.findOne({ signature: extractedData.signature })
-            .populate<{ signer: { email: string; publicKey: string } }>('signer', 'email publicKey');
+            .populate<{ signer: { email: string; organizationName: string; publicKey: string } }>('signer', 'email organizationName publicKey');
 
         if (!documentRecord || !documentRecord.signer) {
             console.log(`[VERIFY] Signature not found in registry`);
@@ -307,9 +308,10 @@ export async function verifyDocument(
         console.log(`[VERIFY] Signature VALID - found in registry with matching public key`);
         res.status(200).json({
             success: true,
-            message: `Document verified! Signed by ${documentRecord.signer.email}`,
+            message: `Document verified! Signed by ${documentRecord.signer.email} (${documentRecord.signer.organizationName})`,
             verified: true,
             signerEmail: documentRecord.signer.email,
+            signerOrganization: documentRecord.signer.organizationName,
             signerPublicKey: documentRecord.signer.publicKey,
             signedAt: documentRecord.createdAt
         });
