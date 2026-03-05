@@ -11,6 +11,9 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Verify from './pages/Verify';
+import Landing from './pages/Landing';
+import Docs from './pages/Docs';
+import About from './pages/About';
 import Layout from './components/Layout';
 
 // ============================================================================
@@ -112,6 +115,13 @@ function App() {
             <AuthProvider>
                 <Routes>
                     {/* Public routes */}
+                    <Route path="/" element={
+                        <PublicRoute>
+                            <Layout>
+                                <Landing />
+                            </Layout>
+                        </PublicRoute>
+                    } />
                     <Route path="/login" element={
                         <PublicRoute>
                             <Login />
@@ -121,6 +131,16 @@ function App() {
                         <PublicRoute>
                             <Register />
                         </PublicRoute>
+                    } />
+                    <Route path="/docs" element={
+                        <Layout>
+                            <Docs />
+                        </Layout>
+                    } />
+                    <Route path="/about" element={
+                        <Layout>
+                            <About />
+                        </Layout>
                     } />
 
                     {/* Public verification page */}

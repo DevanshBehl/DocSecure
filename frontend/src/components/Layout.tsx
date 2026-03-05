@@ -52,6 +52,13 @@ export default function Layout({ children }: LayoutProps) {
                                 <span className="hidden sm:inline">Verify Document</span>
                             </Link>
 
+                            <Link
+                                to="/about"
+                                className="flex items-center gap-2 text-dark-300 hover:text-aegis-primary transition-colors"
+                            >
+                                <span className="hidden sm:inline">About Team</span>
+                            </Link>
+
                             {user && (
                                 <div className="flex items-center gap-4">
                                     <span className="text-sm text-dark-400 hidden md:block">
